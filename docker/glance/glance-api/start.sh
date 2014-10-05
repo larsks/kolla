@@ -10,6 +10,11 @@ fi
 export SERVICE_TOKEN="${KEYSTONE_ADMIN_TOKEN}"
 export SERVICE_ENDPOINT="http://${KEYSTONE_ADMIN_PORT_35357_TCP_ADDR}:35357/v2.0"
 
+while ! curl -sf -o /dev/null "$SERVICE_ENDPOINT"; do
+	echo "waiting for keystone..."
+	sleep 1
+done
+
 crux user-create -n "${GLANCE_KEYSTONE_USER}" \
 	-p "${GLANCE_KEYSTONE_PASSWORD}" \
 	-t "${ADMIN_TENANT_NAME}" \

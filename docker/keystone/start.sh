@@ -16,7 +16,23 @@ if ! [ "$KEYSTONE_DB_PASSWORD" ]; then
     KEYSTONE_DB_PASSWORD=$(openssl rand -hex 15)
 fi
 
-mysql -h ${MARIADB_PORT_3306_TCP_ADDR} -u root -p${DB_ROOT_PASSWORD} mysql <<EOF
+if [ ! -f /startconfig ]; then
+    cat > /startconfig <<EOF
+PUBLIC_IP=$PUBLIC_IP
+KEYSTONE_ADMIN_PASSWORD=$KEYSTONE_ADMIN_PASSWORD
+ADMIN_TENANT_NAME=$ADMIN_TENANT_NAME
+KEYSTONE_ADMIN_TOKEN=$KEYSTONE_ADMIN_TOKEN
+KEYSTONE_DB_PASSWORD=$KEYSTONE_DB_PASSWORD
+EOF
+fi
+
+# wait for mysql to start
+while !  mysql -h 127.0.0.1 -u root -p${DB_ROOT_PASSWORD} -e "select 1" mysql > /dev/null 2>&1; do
+	echo "waiting for mysql..."
+	sleep 1
+done
+
+mysql -h 127.0.0.1 -u root -p${DB_ROOT_PASSWORD} mysql <<EOF
 CREATE DATABASE IF NOT EXISTS keystone;
 GRANT ALL PRIVILEGES ON keystone.* TO
     'keystone'@'%' IDENTIFIED BY '${KEYSTONE_DB_PASSWORD}'
