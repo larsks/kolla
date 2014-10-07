@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Exit the container if MariaDB is not yet up - then depend on kube to restart
-if [ -z "$MARIADB_PORT_3306_TCP_PORT" ]; then
-    exit 1
-fi
+[ -f /startconfig ] && . /startconfig
 
+MY_IP=$(ip route get $(ip route | awk '$1 == "default" {print $3}') |
+    awk '$4 == "src" {print $5}')
+
+: ${PUBLIC_IP:=$MY_IP}
 : ${KEYSTONE_ADMIN_PASSWORD:=kolla}
 : ${ADMIN_TENANT_NAME:=admin}
 
@@ -39,9 +40,17 @@ GRANT ALL PRIVILEGES ON keystone.* TO
 EOF
 
 crudini --set /etc/keystone/keystone.conf \
+    DEFAULT \
+    public_bind_host \
+    ${MY_IP}
+crudini --set /etc/keystone/keystone.conf \
+    DEFAULT \
+    admin_bind_host \
+    ${MY_IP}
+crudini --set /etc/keystone/keystone.conf \
     database \
     connection \
-    "mysql://keystone:${KEYSTONE_DB_PASSWORD}@${MARIADB_PORT_3306_TCP_ADDR}:${MARIADB_PORT_3306_TCP_PORT}/keystone"
+    "mysql://keystone:${KEYSTONE_DB_PASSWORD}@127.0.0.1/keystone"
 crudini --set /etc/keystone/keystone.conf \
     DEFAULT \
     admin_token \
@@ -59,22 +68,11 @@ cat /etc/keystone/keystone.conf
 /usr/bin/keystone-manage db_sync
 /usr/bin/keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
 
-MY_IP=$(ip route get $(ip route | awk '$1 == "default" {print $3}') |
-    awk '$4 == "src" {print $5}')
-if [ -z "$KEYSTONE_ADMIN_PORT_35357_TCP_ADDR" ]; then
-    KEYSTONE_ADMIN_PORT_35357_TCP_ADDR=$MY_IP
-fi
-if [ -z "$KEYSTONE_PUBLIC_PORT_5000_TCP_ADDR" ]; then
-    KEYSTONE_PUBLIC_PORT_5000_TCP_ADDR=$MY_IP
-fi
-
 /usr/bin/keystone-all &
 PID=$!
 
 export SERVICE_TOKEN="${KEYSTONE_ADMIN_TOKEN}"
 export SERVICE_ENDPOINT="http://127.0.0.1:35357/v2.0"
-SERVICE_ENDPOINT_ADMIN="http://${KEYSTONE_ADMIN_PORT_35357_TCP_ADDR}:35357/v2.0"
-SERVICE_ENDPOINT_USER="http://${KEYSTONE_PUBLIC_PORT_5000_TCP_ADDR}:5000/v2.0"
 
 # wait for keystone to become active
 while ! curl -o /dev/null -s --fail ${SERVICE_ENDPOINT}; do
@@ -83,8 +81,9 @@ done
 
 crux user-create -n admin -p "${KEYSTONE_ADMIN_PASSWORD}" -t admin -r admin
 crux endpoint-create -n keystone -t identity \
-    -I "${SERVICE_ENDPOINT_USER}" \
-    -A "${SERVICE_ENDPOINT_ADMIN}"
+    -I "http://127.0.0.1:5000/v2.0" \
+    -P "http://${PUBLIC_IP}:5000/v2.0" \
+    -A "http://127.0.0.1:35357/v2.0"
 
 kill -TERM $PID
 

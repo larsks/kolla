@@ -6,7 +6,7 @@
       "id": "keystone-1",
       "containers": [{
         "name": "keystone",
-        "image": "kollaglue/fedora-rdo-keystone",
+        "image": "larsks/fedora-rdo-keystone",
         "ports": [
           {"containerPort": 5000},
           {"containerPort": 35357}
@@ -15,6 +15,9 @@
           {"name": "DB_ROOT_PASSWORD", "value": "password"},
           {"name": "KEYSTONE_ADMIN_TOKEN", "value": "ADMINTOKEN"}
         ]
+      },{
+      	"name": "keystone-hautoproxy",
+	"image": "larsks/fedora-rdo-hautoproxy"
       }]
     }
   },
