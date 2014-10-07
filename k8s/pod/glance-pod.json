@@ -3,6 +3,10 @@
         "manifest": {
             "containers": [
                 {
+                    "image": "larsks/fedora-rdo-hautoproxy",
+                    "name": "glance-hautoproxy"
+                },
+                {
                     "env": [
                         {
                             "name": "DB_ROOT_PASSWORD",

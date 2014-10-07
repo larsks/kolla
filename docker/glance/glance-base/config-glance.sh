@@ -55,7 +55,7 @@ for cfg in /etc/glance/glance-api.conf /etc/glance/glance-registry.conf; do
     crudini --set $cfg \
         keystone_authtoken \
         auth_uri \
-        "http://${KEYSTONE_PUBLIC_PORT_5000_TCP_ADDR}:5000/"
+        "http://127.0.0.1:5000/"
     crudini --set $cfg \
         keystone_authtoken \
         admin_tenant_name \
@@ -72,6 +72,6 @@ for cfg in /etc/glance/glance-api.conf /etc/glance/glance-registry.conf; do
     crudini --set $cfg \
         database \
         connection \
-        "mysql://${GLANCE_DB_USER}:${GLANCE_DB_PASSWORD}@${MARIADB_PORT_3306_TCP_ADDR}/${GLANCE_DB_NAME}"
+        "mysql://${GLANCE_DB_USER}:${GLANCE_DB_PASSWORD}@127.0.0.1/${GLANCE_DB_NAME}"
 done
 
