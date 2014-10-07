@@ -17,7 +17,7 @@
                             "value": "ADMINTOKEN"
                         }
                     ],
-                    "image": "kollaglue/fedora-rdo-glance-registry",
+                    "image": "larsks/fedora-rdo-glance-registry",
                     "name": "glance-registry",
                     "ports": [
                         {
@@ -40,7 +40,7 @@
                             "value": "ADMINTOKEN"
                         }
                     ],
-                    "image": "kollaglue/fedora-rdo-glance-api",
+                    "image": "larsks/fedora-rdo-glance-api",
                     "name": "glance-api",
                     "ports": [
                         {

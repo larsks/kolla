@@ -9,7 +9,7 @@
                             "value": "password"
                         }
                     ],
-                    "image": "kollaglue/fedora-rdo-mariadb",
+                    "image": "larsks/fedora-rdo-mariadb",
                     "name": "mariadb",
                     "ports": [
                         {
