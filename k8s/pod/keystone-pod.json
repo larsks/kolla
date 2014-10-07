@@ -1,27 +1,44 @@
 {
-  "id": "keystone",
-  "desiredState": {
-    "manifest": {
-      "version": "v1beta1",
-      "id": "keystone-1",
-      "containers": [{
-        "name": "keystone",
-        "image": "larsks/fedora-rdo-keystone",
-        "ports": [
-          {"containerPort": 5000},
-          {"containerPort": 35357}
-        ],
-        "env": [
-          {"name": "DB_ROOT_PASSWORD", "value": "password"},
-          {"name": "KEYSTONE_ADMIN_TOKEN", "value": "ADMINTOKEN"}
-        ]
-      },{
-      	"name": "keystone-hautoproxy",
-	"image": "larsks/fedora-rdo-hautoproxy"
-      }]
+    "desiredState": {
+        "manifest": {
+            "containers": [
+                {
+                    "env": [
+                        {
+                            "name": "DB_ROOT_PASSWORD",
+                            "value": "password"
+                        },
+                        {
+                            "name": "KEYSTONE_ADMIN_TOKEN",
+                            "value": "ADMINTOKEN"
+                        },
+                        {
+                            "name": "KEYSTONE_ROLE",
+                            "value": "master"
+                        }
+                    ],
+                    "image": "larsks/fedora-rdo-keystone",
+                    "name": "keystone",
+                    "ports": [
+                        {
+                            "containerPort": 5001
+                        },
+                        {
+                            "containerPort": 35358
+                        }
+                    ]
+                },
+                {
+                    "image": "larsks/fedora-rdo-hautoproxy",
+                    "name": "keystone-hautoproxy"
+                }
+            ],
+            "id": "keystone-1",
+            "version": "v1beta1"
+        }
+    },
+    "id": "keystone",
+    "labels": {
+        "name": "keystone-bootstrap",
     }
-  },
-  "labels": {
-    "name": "keystone"
-  }
 }

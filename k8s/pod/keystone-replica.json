@@ -1,0 +1,53 @@
+{
+    "apiVersion": "v1beta1",
+    "desiredState": {
+        "podTemplate": {
+            "desiredState": {
+                "manifest": {
+                    "containers": [
+                        {
+                            "env": [
+                                {
+                                    "name": "KEYSTONE_DB_PASSWORD",
+                                    "value": "password"
+                                },
+                                {
+                                    "name": "KEYSTONE_ADMIN_TOKEN",
+                                    "value": "ADMINTOKEN"
+                                }
+                            ],
+                            "image": "larsks/fedora-rdo-keystone",
+                            "name": "keystone",
+                            "ports": [
+                                {
+                                    "containerPort": 5000
+                                },
+                                {
+                                    "containerPort": 35357
+                                }
+                            ]
+                        },
+                        {
+                            "image": "larsks/fedora-rdo-hautoproxy",
+                            "name": "keystone-hautoproxy"
+                        }
+                    ],
+                    "id": "keystone-controller",
+                    "version": "v1beta1"
+                }
+            },
+            "labels": {
+                "name": "keystone"
+            }
+        },
+        "replicaSelector": {
+            "name": "keystone"
+        },
+        "replicas": 2
+    },
+    "id": "keystone-controller",
+    "kind": "ReplicationController",
+    "labels": {
+        "name": "keystone"
+    }
+}

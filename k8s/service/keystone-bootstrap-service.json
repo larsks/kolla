@@ -1,0 +1,10 @@
+{
+  "id": "keystone-bootstrap",
+  "kind": "Service",
+  "apiVersion": "v1beta1",
+  "port": 35358,
+  "containerPort": 35358,
+  "selector": {
+    "name": "keystone-bootstrap",
+  }
+}
