@@ -12,6 +12,10 @@
                             "name": "GLANCE_DB_PASSWORD",
                             "value": "password"
                         },
+			{
+                            "name": "GLANCE_KEYSTONE_PASSWORD",
+                            "value": "password"
+                        },
                         {
                             "name": "KEYSTONE_ADMIN_TOKEN",
                             "value": "ADMINTOKEN"
@@ -33,6 +37,10 @@
                         },
                         {
                             "name": "GLANCE_DB_PASSWORD",
+                            "value": "password"
+                        },
+			{
+                            "name": "GLANCE_KEYSTONE_PASSWORD",
                             "value": "password"
                         },
                         {
