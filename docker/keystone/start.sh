@@ -61,7 +61,14 @@ crudini --del /etc/keystone/keystone.conf \
 crudini --del /etc/keystone/keystone.conf \
     DEFAULT \
     log_dir
-crudini --set /etc/keystone/keystone.conf DEFAULT use_stderr True
+crudini --set /etc/keystone/keystone.conf \
+    DEFAULT \
+    use_stderr \
+    True
+crudini --set /etc/keystone/keystone.conf \
+    paste_deploy \
+    config_file \
+    /usr/share/keystone/keystone-dist-paste.ini
 
 cat /etc/keystone/keystone.conf
 
