@@ -1,6 +1,7 @@
-kubecfg delete /pods/mariadb
-kubecfg delete /pods/keystone
+#!/bin/sh
 
-kubecfg delete /services/mariadbmaster
-kubecfg delete /services/keystonemaster-5000
-kubecfg delete /services/keystonemaster-35357
+cd $(git rev-parse --show-toplevel)
+
+./tools/stop-all-pods
+./tools/stop-all-services
+

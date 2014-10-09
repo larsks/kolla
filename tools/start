@@ -1,7 +1,6 @@
-kubecfg -c ../k8s/mariadb/mariadb-service.json create services
-kubecfg -c ../k8s/keystone/keystone-public-service.json create services
-kubecfg -c ../k8s/keystone/keystone-admin-service.json create services
+#!/bin/sh
 
-kubecfg -c ../k8s/pod/mariadb/mariadb-pod.json create pods
-kubecfg -c ../k8s/pod/keystone/keystone-pod.json create pods
+cd $(git rev-parse --show-toplevel)
 
+./tools/start-all-services
+./tools/start-all-pods
