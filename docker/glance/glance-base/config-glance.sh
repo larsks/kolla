@@ -2,6 +2,8 @@
 #
 # usage config-glance.sh ( api | registry )
 
+. /opt/kolla/kolla-common.sh
+
 [ -f /startconfig ] && . /startconfig
 
 MY_IP=$(ip route get $(ip route | awk '$1 == "default" {print $3}') |
@@ -14,15 +16,7 @@ MY_IP=$(ip route get $(ip route | awk '$1 == "default" {print $3}') |
 : ${KEYSTONE_AUTH_PROTOCOL:=http}
 : ${PUBLIC_IP:=$MY_IP}
 
-if ! [ "$GLANCE_DB_PASSWORD" ]; then
-    GLANCE_DB_PASSWORD=$(openssl rand -hex 15)
-    export GLANCE_DB_PASSWORD
-fi
-
-if ! [ "$GLANCE_KEYSTONE_PASSWORD" ]; then
-    GLANCE_KEYSTONE_PASSWORD=$(openssl rand -hex 15)
-    export GLANCE_KEYSTONE_PASSWORD
-fi
+check_required_vars GLANCE_DB_PASSWORD GLANCE_KEYSTONE_PASSWORD
 
 if ! [ -f /startconfig ]; then
     cat > /startconfig <<-EOF
@@ -48,10 +42,6 @@ for cfg in /etc/glance/glance-api.conf /etc/glance/glance-registry.conf; do
             $option
     done
 
-    crudini --set $cfg \
-        DEFAULT \
-        bind_host \
-        $MY_IP
     crudini --set $cfg \
         keystone_authtoken \
         auth_uri \

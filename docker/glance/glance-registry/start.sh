@@ -1,6 +1,9 @@
 #!/bin/sh
 
-. /opt/glance/config-glance.sh
+. /opt/kolla/kolla-common.sh
+. /opt/kolla/config-glance.sh
+
+wait_for_mysql
 
 mysql -h ${MARIADB_PORT_3306_TCP_ADDR} -u root -p${DB_ROOT_PASSWORD} mysql <<EOF
 CREATE DATABASE IF NOT EXISTS ${GLANCE_DB_NAME} DEFAULT CHARACTER SET utf8;
