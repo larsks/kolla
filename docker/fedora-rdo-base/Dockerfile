@@ -12,6 +12,7 @@ RUN yum update -y; yum clean all
 # Install base packages
 RUN yum install -y \
 	crux \
+	mariadb \
 	mariadb-libs \
 	openssl \
 	openstack-utils \
