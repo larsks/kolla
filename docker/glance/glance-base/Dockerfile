@@ -3,6 +3,6 @@ MAINTAINER Dan Radez <dradez@redhat.com>
 
 RUN yum -y install openstack-glance; yum clean all
 
-RUN mkdir /opt/kolla
+RUN mkdir -p /opt/kolla
 COPY config-glance.sh /opt/kolla/config-glance.sh
 
