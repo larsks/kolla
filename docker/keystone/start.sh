@@ -9,7 +9,7 @@
 
 wait_for_mysql
 
-mysql -h ${MARIADB_SERVICE_HOST} -u root -p"${DB_ROOT_PASSWORD"} mysql <<EOF
+mysql -h ${MARIADB_SERVICE_HOST} -u root -p"${DB_ROOT_PASSWORD}" mysql <<EOF
 CREATE DATABASE IF NOT EXISTS keystone;
 GRANT ALL PRIVILEGES ON keystone.* TO
     'keystone'@'%' IDENTIFIED BY '${KEYSTONE_DB_PASSWORD}'
