@@ -3,7 +3,8 @@ desiredState:
     volumes:
       - name: glance-data
         source:
-          emptyDir: {}
+          hostDir:
+            path: /gluster/glance
     containers:
       - name: glance-registry
         env:

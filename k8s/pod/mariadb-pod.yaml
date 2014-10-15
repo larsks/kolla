@@ -3,7 +3,8 @@ desiredState:
     volumes:
       - name: mariadb-data
         source:
-          emptyDir: {}
+          hostDir:
+            path: /gluster/mariadb
     containers:
     - env:
       - name: DB_ROOT_PASSWORD
