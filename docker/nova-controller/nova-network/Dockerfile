@@ -1,0 +1,10 @@
+FROM kollaglue/fedora-rdo-nova-ctr-base
+MAINTAINER Ryan Hallisey <rhallise@redhat.com>
+
+RUN yum -y install \
+        openstack-nova-network \
+	bridge-utils \
+	&& yum clean all
+
+ADD ./start.sh /start.sh
+CMD ["/start.sh"]

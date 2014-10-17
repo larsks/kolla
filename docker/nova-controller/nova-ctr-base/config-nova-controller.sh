@@ -10,6 +10,11 @@
 : ${RABBIT_USERID:=guest}
 : ${RABBIT_PASSWORD:=guest}
 
+: ${NOVA_NETWORK_SIZE:=254}
+: ${NOVA_FLAT_INTERFACE:=eth0}
+: ${NOVA_PUBLIC_INTERFACE:=eth0}
+: ${NOVA_FLAT_NETWORK_BRIDGE:=br-nova}
+
 check_required_vars KEYSTONE_ADMIN_TOKEN \
     NOVA_DB_PASSWORD NEUTRON_SHARED_SECRET
 
@@ -36,13 +41,22 @@ crudini --set $cfg DEFAULT service_down_time 60
 crudini --set $cfg DEFAULT rootwrap_config /etc/nova/rootwrap.conf
 crudini --set $cfg DEFAULT auth_strategy keystone
 crudini --set $cfg DEFAULT use_forwarded_for False
-crudini --set $cfg DEFAULT service_neutron_metadata_proxy True
-crudini --set $cfg DEFAULT neutron_metadata_proxy_shared_secret ${NEUTRON_SHARED_SECRET}
-crudini --set $cfg DEFAULT neutron_default_tenant_id default
+
+#crudini --set $cfg DEFAULT service_neutron_metadata_proxy True
+#crudini --set $cfg DEFAULT neutron_metadata_proxy_shared_secret ${NEUTRON_SHARED_SECRET}
+#crudini --set $cfg DEFAULT neutron_default_tenant_id default
+
+crudini --set $cfg DEFAULT network_api_class nova.network.api.API
+crudini --set $cfg DEFAULT network_manager nova.network.manager.FlatDHCPManager
+crudini --set $cfg DEFAULT network_size ${NOVA_NETWORK_SIZE}
+crudini --set $cfg DEFAULT multi-host False
+crudini --set $cfg DEFAULT flat_interface ${NOVA_FLAT_INTERFACE}
+crudini --set $cfg DEFAULT flat_network_bridge ${NOVA_FLAT_NETWORK_BRIDGE}
+crudini --set $cfg DEFAULT public_interface ${NOVA_PUBLIC_INTERFACE}
+
 crudini --set $cfg DEFAULT novncproxy_host 0.0.0.0
 crudini --set $cfg DEFAULT novncproxy_port 6080
 crudini --set $cfg DEFAULT glance_api_servers ${GLANCE_API_SERVICE_HOST}:9292
-crudini --set $cfg DEFAULT network_api_class nova.network.neutronv2.api.API
 crudini --set $cfg DEFAULT metadata_host ${MY_IP}
 crudini --set $cfg DEFAULT cpu_allocation_ratio 16.0
 crudini --set $cfg DEFAULT ram_allocation_ratio 1.5
